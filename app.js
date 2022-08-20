@@ -21,21 +21,28 @@ app.post("/", function(req,res) {
   const firstName = req.body.fName;
   const lastName = req.body.lName;
   const email = req.body.email;
-  const listId = "3b0fa7c633";
 
   async function addMember() {
-    const response = await mailchimp.lists.addListMember(listId , {
+    const response = await mailchimp.lists.addListMember("3b0fa7c633", {
       email_address: email,
-      status:"subscribed",
+      status: "subscribed",
       merge_fields: {
         FNAME: firstName,
         LNAME: lastName
       }
     });
+    res.sendFile(__dirname + "/success.html");
+    console.log("successfully added a contact as a audience Member ! ")
   };
-  // addMember();
-  console.log(res.statusCode);
+   addMember().catch(e => res.sendFile(__dirname + "/failure.html"));
+});
 
+app.post("/failure", function(req,res) {
+  res.redirect("/");
+});
+
+app.post("/success", function(req,res) {
+  res.redirect("/");
 });
 
 app.listen(3000, function() {
@@ -45,4 +52,4 @@ app.listen(3000, function() {
 
 //Api Key : 38a85612af8f1e7a6702ac0fd2e3832f-us12
 
-//List ID: 3b0fa7c633.
+//List ID: 3b0fa7c633   3b0fa7c633
